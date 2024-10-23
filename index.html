@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 100px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .btn:last-child {
+      margin-bottom: 0;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 20px -6px rgba(79, 70, 229, 0.3);
+      background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn.copy {
+      display: none;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    }
+
+    .btn.copy:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+
+    .success-message {
+      color: #10B981;
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 500;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <input type="text" id="nomeUsuario" placeholder="Digite seu nome de usuário">
+    <button class="btn generate" onclick="gerarCodigo()">Gerar Código</button>
+    <button class="btn copy" id="copyButton" onclick="copiarCodigo()">Copiar Código</button>
+    <p class="success-message" id="successMessage">Código copiado com sucesso!</p>
+  </div>
+
+  <script>
+    let codigoGerado = '';
+
+    function gerarCodigo() {
+      const nomeUsuario = document.getElementById('nomeUsuario').value;
+      if (!nomeUsuario) {
+        alert('Por favor, digite um nome de usuário');
+        return;
+      }
+
+      codigoGerado = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}body{background-color:#f5f5f5;min-height:100vh;display:flex;align-items:center;justify-content:center}h1{color:#1a1a1a;text-align:center;font-size:2rem;margin-bottom:2rem}#modalVencido{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);backdrop-filter:blur(5px);transition:all .3s ease}.modal-content{background:white;border-radius:20px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);margin:15% auto;padding:2.5rem;width:90%;max-width:500px;text-align:center;position:relative;transform:scale(0.7);opacity:0;transition:all .3s ease}#modalVencido.active .modal-content{transform:scale(1);opacity:1}.modal-content p{font-size:1.25rem;color:#374151;line-height:1.6;margin-bottom:2rem;font-weight:500}.modal-btn{background:linear-gradient(135deg,#4f46e5 0,#4338ca 100%);color:white;padding:1rem 3rem;border:0;border-radius:100px;font-size:1.1rem;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 4px 6px -1px rgba(79,70,229,0.2);position:relative;overflow:hidden;text-transform:uppercase;letter-spacing:.5px}.modal-btn:hover{transform:translateY(-2px);box-shadow:0 12px 20px -6px rgba(79,70,229,0.3);background:linear-gradient(135deg,#4338ca 0,#3730a3 100%)}.modal-btn:active{transform:translateY(0);box-shadow:0 6px 10px -3px rgba(79,70,229,0.3)}div[style*="position: fixed"][style*="bottom: 10px"][style*="right: 10px"][style*="z-index: 100000000000"],div[style*="position:fixed"][style*="bottom:10px"][style*="right:10px"][style*="z-index:100000000000"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important;min-width:1px !important;min-height:1px !important;max-width:1px !important;max-height:1px !important;overflow:hidden !important;position:fixed !important;bottom:0 !important;right:0 !important;margin:0 !important;padding:0 !important;z-index:-9999 !important;pointer-events:none !important;transform:scale(0) !important}img[src*="banner-icon.svg"],img[alt="Bubble"][src*="banner-icon"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important;pointer-events:none !important}a[href*="bubble.io?utm_source=app_mention"]{opacity:0 !important;visibility:hidden !important;pointer-events:none !important;width:1px !important;height:1px !important}div[style*="color: white"][style*="font-size: 12px"][style*="font-family: Arial"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important}.modal-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.2),transparent);transition:.5s}.modal-btn:hover::before{left:100%}@media(max-width:640px){.modal-content{margin:30% auto;padding:2rem}.modal-btn{width:100%;padding:1rem 2rem}}
+  </style>
+</head>
+<body>
+<div id="modalVencido">
+  <div class="modal-content">
+    <p id="modalMessage"></p>
+    <button class="modal-btn" onclick="closeModal()">Entendi</button>
+  </div>
+</div>
+
+<script>
+  function showModal(mensagem) {
+    var modal = document.getElementById("modalVencido");
+    var modalMessage = document.getElementById("modalMessage");
+    modalMessage.textContent = mensagem;
+    modal.style.display = "block";
+    setTimeout(() => {
+      modal.classList.add("active");
+    }, 10);
+  }
+
+  function closeModal() {
+    var modal = document.getElementById("modalVencido");
+    modal.classList.remove("active");
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 300);
+  }
+
+  window.onclick = function(event) {
+    var modal = document.getElementById("modalVencido");
+    if (event.target == modal) {
+      closeModal();
+    }
+  };
+
+  const usuario = "${nomeUsuario}";
+
+  function verificarMensalidade(data, hora) {
+    const dataUsuario = new Date(\`\${data}T\${hora}-03:00\`);
+    const agora = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+    return agora > dataUsuario;
+  }
+
+  fetch('https://raw.githubusercontent.com/uqfelipe/Marca-da-agua-buble/refs/heads/main/dados.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Sua Key está vencida.');
+      }
+      return response.json();
+    })
+    .then(dados => {
+      const usuarioData = dados.find(user => user.nome_usuario === usuario);
+      if (usuarioData) {
+        const { data, hora } = usuarioData;
+        if (verificarMensalidade(data, hora)) {
+          showModal(\`\${usuario}, Sua Key está vencida.\`);
+        }
+      } else {
+        showModal(\`\${usuario}, Sua Key está vencida.\`);
+      }
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+      showModal(\`\${usuario}, Espertinho tentando Modificar o Codigo Trouxa só Pagando comedia.\`);
+    });
+<\/script>
+
+</body>
+</html>`;
+
+      document.getElementById('copyButton').style.display = 'block';
+    }
+
+    function copiarCodigo() {
+      navigator.clipboard.writeText(codigoGerado).then(() => {
+        const successMessage = document.getElementById('successMessage');
+        successMessage.style.display = 'block';
+        setTimeout(() => {
+          successMessage.style.display = 'none';
+        }, 3000);
+      }).catch(err => {
+        alert('Erro ao copiar código');
+      });
+    }
+  </script>
+</body>
+</html>
