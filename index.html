@@ -84,11 +84,38 @@
       font-weight: 500;
       display: none;
     }
+
+    .date-inputs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .date-inputs input {
+      margin-bottom: 0;
+    }
+
+    #dia, #mes, #ano {
+      text-align: center;
+    }
+
+    #dia, #mes {
+      width: 80px;
+    }
+
+    #ano {
+      width: 100px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <input type="text" id="nomeUsuario" placeholder="Digite seu nome de usuário">
+    <div class="date-inputs">
+      <input type="number" id="dia" placeholder="Dia" min="1" max="31">
+      <input type="number" id="mes" placeholder="Mês" min="1" max="12">
+      <input type="number" id="ano" placeholder="Ano" min="2024" max="2099">
+    </div>
+    <input type="time" id="horaExpiracao" placeholder="Selecione a hora">
     <button class="btn generate" onclick="gerarCodigo()">Gerar Código</button>
     <button class="btn copy" id="copyButton" onclick="copiarCodigo()">Copiar Código</button>
     <p class="success-message" id="successMessage">Código copiado com sucesso!</p>
@@ -97,90 +124,46 @@
   <script>
     let codigoGerado = '';
 
+    function validarData(dia, mes, ano) {
+      const data = new Date(ano, mes - 1, dia);
+      return data.getFullYear() === ano && data.getMonth() === mes - 1 && data.getDate() === dia;
+    }
+
+    function formatarNumero(num) {
+      return num.toString().padStart(2, '0');
+    }
+
+    function encryptDate(dia, mes, ano, time) {
+      const dataISO = `${ano}-${formatarNumero(mes)}-${formatarNumero(dia)}`;
+      const text = `${dataISO}T${time}`;
+      const key = btoa(dia.toString() + mes.toString() + ano.toString() + time.split(':').join(''));
+      let encrypted = '';
+      for(let i = 0; i < text.length; i++) {
+        encrypted += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+      }
+      const final = btoa(encrypted) + '.' + key;
+      return final;
+    }
+
     function gerarCodigo() {
-      const nomeUsuario = document.getElementById('nomeUsuario').value;
-      if (!nomeUsuario) {
-        alert('Por favor, digite um nome de usuário');
+      const dia = parseInt(document.getElementById('dia').value);
+      const mes = parseInt(document.getElementById('mes').value);
+      const ano = parseInt(document.getElementById('ano').value);
+      const hora = document.getElementById('horaExpiracao').value;
+      
+      if (!dia || !mes || !ano || !hora) {
+        alert('Por favor, preencha todos os campos');
         return;
       }
 
-      codigoGerado = `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
- @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}body{background-color:#f5f5f5;min-height:100vh;display:flex;align-items:center;justify-content:center}h1{color:#1a1a1a;text-align:center;font-size:2rem;margin-bottom:2rem}#modalVencido{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);backdrop-filter:blur(5px);transition:all .3s ease}.modal-content{background:white;border-radius:20px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);margin:15% auto;padding:2.5rem;width:90%;max-width:500px;text-align:center;position:relative;transform:scale(0.7);opacity:0;transition:all .3s ease}#modalVencido.active .modal-content{transform:scale(1);opacity:1}.modal-content p{font-size:1.25rem;color:#374151;line-height:1.6;margin-bottom:2rem;font-weight:500}.modal-btn{background:linear-gradient(135deg,#4f46e5 0,#4338ca 100%);color:white;padding:1rem 3rem;border:0;border-radius:100px;font-size:1.1rem;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 4px 6px -1px rgba(79,70,229,0.2);position:relative;overflow:hidden;text-transform:uppercase;letter-spacing:.5px}.modal-btn:hover{transform:translateY(-2px);box-shadow:0 12px 20px -6px rgba(79,70,229,0.3);background:linear-gradient(135deg,#4338ca 0,#3730a3 100%)}.modal-btn:active{transform:translateY(0);box-shadow:0 6px 10px -3px rgba(79,70,229,0.3)}div[style*="position: fixed"][style*="bottom: 10px"][style*="right: 10px"][style*="z-index: 100000000000"],div[style*="position:fixed"][style*="bottom:10px"][style*="right:10px"][style*="z-index:100000000000"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important;min-width:1px !important;min-height:1px !important;max-width:1px !important;max-height:1px !important;overflow:hidden !important;position:fixed !important;bottom:0 !important;right:0 !important;margin:0 !important;padding:0 !important;z-index:-9999 !important;pointer-events:none !important;transform:scale(0) !important}img[src*="banner-icon.svg"],img[alt="Bubble"][src*="banner-icon"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important;pointer-events:none !important}a[href*="bubble.io?utm_source=app_mention"]{opacity:0 !important;visibility:hidden !important;pointer-events:none !important;width:1px !important;height:1px !important}div[style*="color: white"][style*="font-size: 12px"][style*="font-family: Arial"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important}.modal-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.2),transparent);transition:.5s}.modal-btn:hover::before{left:100%}@media(max-width:640px){.modal-content{margin:30% auto;padding:2rem}.modal-btn{width:100%;padding:1rem 2rem}}
-  </style>
-</head>
-<body>
-<div id="modalVencido">
-  <div class="modal-content">
-    <p id="modalMessage"></p>
-    <button class="modal-btn" onclick="closeModal()">Entendi</button>
-  </div>
-</div>
-
-<script>
-  function showModal(mensagem) {
-    var modal = document.getElementById("modalVencido");
-    var modalMessage = document.getElementById("modalMessage");
-    modalMessage.textContent = mensagem;
-    modal.style.display = "block";
-    setTimeout(() => {
-      modal.classList.add("active");
-    }, 10);
-  }
-
-  function closeModal() {
-    var modal = document.getElementById("modalVencido");
-    modal.classList.remove("active");
-    setTimeout(() => {
-      modal.style.display = "none";
-    }, 300);
-  }
-
-  window.onclick = function(event) {
-    var modal = document.getElementById("modalVencido");
-    if (event.target == modal) {
-      closeModal();
-    }
-  };
-
-  const usuario = "${nomeUsuario}";
-
-  function verificarMensalidade(data, hora) {
-    const dataUsuario = new Date(\`\${data}T\${hora}-03:00\`);
-    const agora = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
-    return agora > dataUsuario;
-  }
-
-  fetch('https://raw.githubusercontent.com/uqfelipe/Marca-da-agua-buble/refs/heads/main/dados.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Sua Key está vencida.');
+      if (!validarData(dia, mes, ano)) {
+        alert('Data inválida');
+        return;
       }
-      return response.json();
-    })
-    .then(dados => {
-      const usuarioData = dados.find(user => user.nome_usuario === usuario);
-      if (usuarioData) {
-        const { data, hora } = usuarioData;
-        if (verificarMensalidade(data, hora)) {
-          showModal(\`\${usuario}, Sua Key está vencida.\`);
-        }
-      } else {
-        showModal(\`\${usuario}, Sua Key está vencida.\`);
-      }
-    })
-    .catch(error => {
-      console.error('Erro:', error);
-      showModal(\`\${usuario}, Espertinho tentando Modificar o Codigo Trouxa só Pagando comedia.\`);
-    });
-<\/script>
 
-</body>
-</html>`;
+      const encryptedDate = encryptDate(dia, mes, ano, hora);
+
+      codigoGerado = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}body{background-color:#f5f5f5;min-height:100vh;display:flex;align-items:center;justify-content:center}h1{color:#1a1a1a;text-align:center;font-size:2rem;margin-bottom:2rem}#modalVencido{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);backdrop-filter:blur(5px);transition:all .3s ease}.modal-content{background:white;border-radius:20px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);margin:15% auto;padding:2.5rem;width:90%;max-width:500px;text-align:center;position:relative;transform:scale(0.7);opacity:0;transition:all .3s ease}#modalVencido.active .modal-content{transform:scale(1);opacity:1}.modal-content p{font-size:1.25rem;color:#374151;line-height:1.6;margin-bottom:2rem;font-weight:500}.modal-btn{background:linear-gradient(135deg,#4f46e5 0,#4338ca 100%);color:white;padding:1rem 3rem;border:0;border-radius:100px;font-size:1.1rem;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 4px 6px -1px rgba(79,70,229,0.2);position:relative;overflow:hidden;text-transform:uppercase;letter-spacing:.5px}.modal-btn:hover{transform:translateY(-2px);box-shadow:0 12px 20px -6px rgba(79,70,229,0.3);background:linear-gradient(135deg,#4338ca 0,#3730a3 100%)}.modal-btn:active{transform:translateY(0);box-shadow:0 6px 10px -3px rgba(79,70,229,0.3)}div[style*="position: fixed"][style*="bottom: 10px"][style*="right: 10px"][style*="z-index: 100000000000"],div[style*="position:fixed"][style*="bottom:10px"][style*="right:10px"][style*="z-index:100000000000"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important;min-width:1px !important;min-height:1px !important;max-width:1px !important;max-height:1px !important;overflow:hidden !important;position:fixed !important;bottom:0 !important;right:0 !important;margin:0 !important;padding:0 !important;z-index:-9999 !important;pointer-events:none !important;transform:scale(0) !important}img[src*="banner-icon.svg"],img[alt="Bubble"][src*="banner-icon"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important;pointer-events:none !important}a[href*="bubble.io?utm_source=app_mention"]{opacity:0 !important;visibility:hidden !important;pointer-events:none !important;width:1px !important;height:1px !important}div[style*="color: white"][style*="font-size: 12px"][style*="font-family: Arial"]{opacity:0 !important;visibility:hidden !important;width:1px !important;height:1px !important}.modal-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.2),transparent);transition:.5s}.modal-btn:hover::before{left:100%}@media(max-width:640px){.modal-content{margin:30% auto;padding:2rem}.modal-btn{width:100%;padding:1rem 2rem}}</style></head><body><div id="modalVencido"><div class="modal-content"><p id="modalMessage"></p><button class="modal-btn" onclick="closeModal()">Entendi</button></div></div><script>function decryptDate(encrypted){try{const [data,key] = encrypted.split('.');let decrypted = '';const encryptedText = atob(data);for(let i = 0;i < encryptedText.length;i++){decrypted+= String.fromCharCode(encryptedText.charCodeAt(i) ^ key.charCodeAt(i % key.length))}return decrypted}catch(e){return null}}function verificarIntegridade(encrypted){if(!encrypted || encrypted.trim() === ''){return false}try{const [data,key] = encrypted.split('.');if(!data ||!key){return false}return Boolean(atob(data))}catch(e){return false}}function showModal(mensagem){var modal = document.getElementById("modalVencido");var modalMessage = document.getElementById("modalMessage");modalMessage.textContent = mensagem;modal.style.display = "block";setTimeout(() =>{modal.classList.add("active")},10)}function closeModal(){var modal = document.getElementById("modalVencido");modal.classList.remove("active");setTimeout(() =>{modal.style.display = "none"},300)}window.onclick = function(event){var modal = document.getElementById("modalVencido");if(event.target == modal){closeModal()}};function formatarData(data){const [dataCompleta] = data.split('T');const [ano,mes,dia] = dataCompleta.split('-');return \`\${dia}/\${mes}/\${ano}\`}function isValidDate(dateString){const date = new Date(dateString);return date instanceof Date &&!isNaN(date)}function verificarValidade(){const encryptedData = "${encryptedDate}";if(!verificarIntegridade(encryptedData)){showModal("Licença inválida ou não encontrada");return}const decryptedDate = decryptDate(encryptedData);if(!decryptedDate ||!isValidDate(decryptedDate)){showModal("Data de licença inválida ou corrompida");return}const dataExpiracao = new Date(decryptedDate+":00-03:00");const agora = new Date(new Date().toLocaleString("en-US",{timeZone:"America/Sao_Paulo"}));if(agora>dataExpiracao){const dataFormatada = formatarData(decryptedDate);showModal(\`Sua licença está vencida. Data de expiração:\${dataFormatada}\`)}}verificarValidade();// Verificação periódica setInterval(verificarValidade,60000);<\/script></body></html>`;
 
       document.getElementById('copyButton').style.display = 'block';
     }
