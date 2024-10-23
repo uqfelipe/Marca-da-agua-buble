@@ -9,8 +9,3 @@
   [headers.values]
     Access-Control-Allow-Origin = "https://*.bubbleapps.io"
     Access-Control-Allow-Methods = "GET"
-    [[redirects]]
-  from = "/*.json"
-  to = "/404.html"
-  status = 404
-
