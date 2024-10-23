@@ -19,8 +19,9 @@
       "source": "/(.*).json",
       "has": [
         {
-          "type": "host",
-          "value": "marca-da-agua-buble.vercel.app"
+          "type": "header",
+          "key": "Referer",
+          "value": "^(?!https://.*\\.bubbleapps\\.io).*"
         }
       ],
       "destination": "/404.html",
