@@ -13,5 +13,19 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*).json",
+      "has": [
+        {
+          "type": "header",
+          "key": "origin",
+          "value": "^(?!https://.*\\.bubbleapps\\.io).*"
+        }
+      ],
+      "destination": "/404.html",
+      "statusCode": 404
+    }
   ]
 }
